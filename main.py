@@ -3,7 +3,7 @@
 # Create pulse width modulation signal, graph it,
 # and see the effect of modifying parameters
 
-from PyQt5.QtWidgets import QApplication, QLabel, QWidget, QPushButton, QVBoxLayout
+from PyQt6.QtWidgets import QApplication, QLabel, QWidget, QPushButton, QVBoxLayout
 import numpy as np
 import matplotlib.pyplot as plt
 
