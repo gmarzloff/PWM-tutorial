@@ -9,5 +9,6 @@ pyparsing==3.0.9
 PyQt6==6.3.0
 PyQt6-Qt6==6.3.0
 PyQt6-sip==13.3.1
+pyqtgraph @ git+https://github.com/pyqtgraph/pyqtgraph@2527c5bc16f3a1318d323f447bda4759c56e62d4
 python-dateutil==2.8.2
 six==1.16.0

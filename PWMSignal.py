@@ -1,4 +1,4 @@
-import matplotlib.pyplot as plt
+
 import numpy as np
 
 class PWMSignal:
@@ -16,12 +16,3 @@ class PWMSignal:
         self.t = np.arange(0, self.cycle_period_sec * self.cycles, self.dt)
         self.y = self.t % self.cycle_period_sec < self.cycle_period_sec * self.duty_percent / 100
         return self.t, self.y
-
-    def plot_graph(self):
-        plt.plot(self.t, self.y)
-        plt.show()
-
-    def update_duty_and_plot(self, new_duty):
-        self.duty_percent = new_duty
-        self.generate_timeseries()
-        self.plot_graph()
