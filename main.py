@@ -7,29 +7,17 @@ import sys
 import matplotlib
 matplotlib.use('Qt5Agg')
 
-from PyQt6.QtWidgets import QApplication, QLabel, QWidget, QPushButton, QVBoxLayout, QHBoxLayout, QMainWindow
-import pyqtgraph as pg
-
-from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg
-from matplotlib.figure import Figure
-# from layout_colorwidget import Color
-
+from PyQt6.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout, QHBoxLayout, QMainWindow
 from PWMSignal import PWMSignal
-
-class MplCanvas(FigureCanvasQTAgg):
-    def __init__(self, parent=None, width=5, height=4, dpi=100):
-        fig = Figure(figsize=(width,height), dpi=dpi)
-        self.axes = fig.add_subplot(111)
-        super(MplCanvas, self).__init__(fig)
+import pyqtgraph as pg
 
 class MainWindow(QMainWindow):
     def __init__(self, *args, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
 
         self.pwm = PWMSignal()
-
+        self.graph_title = "PWM signal at "+str(self.pwm.cycles)+" Hz"
         self.setWindowTitle("PWM Tutorial")
-        # self.duty_buttons_box = QWidget()
 
         main_layout = QHBoxLayout()
         duty_buttons_layout = QVBoxLayout()
@@ -43,27 +31,35 @@ class MainWindow(QMainWindow):
 
         # plot using PyQtGraph
         self.graphWidget = pg.PlotWidget()
-        times = [0, 1, 2, 3, 4]
-        temps = [10, 1, 20, 3, 40]
         pen = pg.mkPen(color=(0, 0, 200), width=3)
         self.graphWidget.setBackground('w')
-        self.graphWidget.plot(times,temps,pen=pen)
+        self.generate_graph_title(duty_percents[0])
+        style = {'color':'blue', 'font-size': '15px'}
+        self.graphWidget.setLabel('left', 'Voltage', **style)
+        self.graphWidget.setLabel('bottom', 'time', **style)
+        self.graphWidget.showGrid(x=True, y=True)
+
+        data = self.pwm.generate_timeseries()
+        self.line_reference = self.graphWidget.plot(data[0], data[1], pen=pen)
 
         main_layout.addWidget(self.graphWidget)
 
         container = QWidget()
         container.setLayout(main_layout)
         self.setCentralWidget(container)
-
-        # plot_canvas = MplCanvas(self, width=5, height=4, dpi=100)
-        # plot_canvas.axes.plot(
-
         self.show()
+
+    def generate_graph_title(self, duty):
+        new_title = "PWM signal at "+str(self.pwm.cycles)+" Hz and " + str(duty) + "% duty"
+        self.graphWidget.setTitle(new_title, size="15pt")
 
     def button_handler(self):
         # noinspection PyTypeChecker
         source: QPushButton = self.sender()
-        # self.pwm.update_duty_and_plot(int(source.text()[:-1]))
+        duty = int(source.text()[:-1])
+        data = self.pwm.generate_timeseries(duty)
+        self.generate_graph_title(duty)
+        self.line_reference.setData(data[0], data[1])
 
 
 def main():
