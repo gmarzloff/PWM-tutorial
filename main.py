@@ -4,9 +4,6 @@
 
 # plotting based on tutorial https://www.pythonguis.com/tutorials/plotting-matplotlib/
 import sys
-import matplotlib
-matplotlib.use('Qt5Agg')
-
 from PyQt6.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout, QHBoxLayout, QMainWindow
 from PWMSignal import PWMSignal
 import pyqtgraph as pg
